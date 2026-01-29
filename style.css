@@ -215,6 +215,10 @@ section {
   padding-bottom: 2rem;
 }
 
+section > p {
+ margin: 1.3rem
+}
+
 footer {
   text-align: center;
   padding: 2rem;
