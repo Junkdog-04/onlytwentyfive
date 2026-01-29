@@ -1,31 +1,672 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Only twenty five | Another project by Jorge Rosales</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <main>
-    <header>
-      <nav>
-        <a href="https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html" target="_blank" rel="noopener noreferrer">TypeScript</a>
 
-        <input type="checkbox" id="menu-toggle">
-        <label for="menu-toggle" class="menu-btn">☰</label>
-        <ul>
-          <li><a href="https://junkdog-04.github.io/whatsthetrick/" target="_blank" rel="noopener noreferrer">What's the trick</a></li>
-          <li><a href="https://junkdog-04.github.io/python/" target="_blank" rel="noopener noreferrer">Welcome to Python</a></li>
-          <li><a href="#started">Let's started</a></li>
-          <li><a href="#algorithms">Algorithms</a></li>
-          <li><a href="#letsuseit">Let's use it</a></li>
-        </ul>
-      </nav>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Only Twenty Five | Another project by Jorge Rosales</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <a class="logo-style" href="https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html" target="_blank"
+        rel="noopener noreferrer">Only<span>twentyfive</span></a>
+
+      <input type="checkbox" id="menu-toggle">
+      <label for="menu-toggle" class="menu-btn">☰</label>
+
+      <ul>
+        <li><a href="#started">Home</a></li>
+        <li><a href="#arrays">Arrays</a></li>
+        <li><a href="#strings">Strings</a></li>
+        <li><a href="#dp">DP</a></li>
+        <li><a href="#trees">Trees</a></li>
+        <li><a href="#backtracking">Backtracking</a></li>
+        <li><a href="#linkedlist">Linked List</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#graphs">Graphs</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <section id="started">
+      <h1 class="logo-style">Only<span>twentyfive</span></h1>
+      <p>
+        A curated collection of essential algorithmic patterns.
+        Each section focuses on why the pattern exists,
+        when to use it, and how it is applied through real problems.
+      </p>
+    </section>
+
+    <section id="arrays">
+      <h2 class="logo-style">Arrays <span>,Two Pointers & Hashing</span></h2>
+      <p>
+        This section focuses on linear data structures and techniques that optimize
+        traversal using pointers and constant-time lookups through hashing.
+      </p>
+
+      <article>
+        <h3><a href="https://leetcode.com/problems/3sum/" target="_blank" rel="noopener noreferrer">3Sum</a></h3>
+        <pre><code>
+function threeSum(nums: number[]): number[][] {
+  nums.sort((a, b) => a - b);
+  const result: number[][] = [];
+
+  for (let i = 0; i < nums.length - 2; i++) {
+    if (i > 0 && nums[i] === nums[i - 1]) continue;
+    if (nums[i] > 0) break;
+
+    let left = i + 1;
+    let right = nums.length - 1;
+
+    while (left < right) {
+      const sum = nums[i] + nums[left] + nums[right];
+
+      if (sum === 0) {
+        result.push([nums[i], nums[left], nums[right]]);
+        while (left < right && nums[left] === nums[left + 1]) left++;
+        while (left < right && nums[right] === nums[right - 1]) right--;
+        left++;
+        right--;
+      } else if (sum < 0) {
+        left++;
+      } else {
+        right--;
+      }
+    }
+  }
+
+  return result;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3><a href="https://leetcode.com/problems/container-with-most-water/" target="_blank" rel="noopener noreferrer">Container
+          With Most Water</a></h3>
+       
+        <pre><code>
+function maxArea(height: number[]): number {
+  let left = 0;
+  let right = height.length - 1;
+  let maxVolume = 0;
+
+  while (left < right) {
+    const minHeight = Math.min(height[left], height[right]);
+    const width = right - left;
+    maxVolume = Math.max(maxVolume, minHeight * width);
+    height[left] < height[right] ? left++ : right--;
+  }
+
+  return maxVolume;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3><a href="https://leetcode.com/problems/longest-consecutive-sequence/" target="_blank" rel="noopener noreferrer">Longest
+          Consecutive Sequence</a></h3>
+        <pre><code>
+function longestConsecutive(nums: number[]): number {
+  const set = new Set(nums);
+  let longest = 0;
+
+  for (const num of set) {
+    if (!set.has(num - 1)) {
+      let current = num;
+      let streak = 1;
+
+      while (set.has(current + 1)) {
+        current++;
+        streak++;
+      }
+
+      longest = Math.max(longest, streak);
+    }
+  }
+
+  return longest;
+}
+</code></pre>
+      </article>
+    </section>
+
+    <section id="strings">
+      <h2 class="logo-style">Strings</h2>
+      <p>
+        String problems emphasize sliding windows, character frequency tracking,
+        and efficient substring evaluation.
+      </p>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/longest-substring-without-repeating-characters/" target="_blank"
+            rel="noopener noreferrer">Longest Substring Without Repeating Characters</a>
+        </h3>
+        <pre><code>
+function lengthOfLongestSubstring(s: string): number {
+  let left = 0;
+  let seen = new Set<string>();
+  let maxLength = 0;
+
+  for (let right = 0; right < s.length; right++) {
+    while (seen.has(s[right])) {
+      seen.delete(s[left]);
+      left++;
+    }
+    seen.add(s[right]);
+    maxLength = Math.max(maxLength, right - left + 1);
+  }
+
+  return maxLength;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/minimum-window-substring/" target="_blank" rel="noopener noreferrer">Minimum
+            Window Substring</a>
+        </h3>
+        <pre><code>
+function minWindow(s: string, t: string): string {
+  if (!s || !t || s.length < t.length) return "";
+
+  const map = new Array(128).fill(0);
+  let count = t.length;
+  let left = 0;
+  let minLen = Infinity;
+  let start = 0;
+
+  for (const c of t) map[c.charCodeAt(0)]++;
+
+  for (let right = 0; right < s.length; right++) {
+    if (map[s.charCodeAt(right)]-- > 0) count--;
+
+    while (count === 0) {
+      if (right - left + 1 < minLen) {
+        minLen = right - left + 1;
+        start = left;
+      }
+      if (++map[s.charCodeAt(left++)] > 0) count++;
+    }
+  }
+
+  return minLen === Infinity ? "" : s.substring(start, start + minLen);
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank" rel="noopener noreferrer">Longest
+            Palindromic Substring</a>
+        </h3>
+        
+        <pre><code>
+function longestPalindrome(s: string): string {
+  if (s.length < 1) return "";
+  let start = 0, end = 0;
+
+  const expand = (l: number, r: number) => {
+    while (l >= 0 && r < s.length && s[l] === s[r]) {
+      l--; r++;
+    }
+    return r - l - 1;
+  };
+
+  for (let i = 0; i < s.length; i++) {
+    const len = Math.max(expand(i, i), expand(i, i + 1));
+    if (len > end - start) {
+      start = i - Math.floor((len - 1) / 2);
+      end = i + Math.floor(len / 2);
+    }
+  }
+  return s.substring(start, end + 1);
+}
+</code></pre>
+      </article>
+    </section>
+
+    <section id="dp">
+      <h2 class="logo-style">Dynamic <span>Programming</span></h2>
+      <p>
+        Dynamic Programming solves problems by breaking them into overlapping subproblems
+        and reusing previously computed results.
+      </p>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/climbing-stairs/" target="_blank" rel="noopener noreferrer">Climbing Stairs</a>
+        </h3>
+        <pre><code>
+function climbStairs(n: number): number {
+  if (n <= 2) return n;
+  let prev = 1, current = 2;
+
+  for (let i = 3; i <= n; i++) {
+    const next = prev + current;
+    prev = current;
+    current = next;
+  }
+  return current;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/house-robber/" target="_blank" rel="noopener noreferrer">House Robber</a>
+        </h3>
+        <pre><code>
+function rob(nums: number[]): number {
+  let prev = 0, curr = 0;
+  for (const num of nums) {
+    const temp = Math.max(curr, prev + num);
+    prev = curr;
+    curr = temp;
+  }
+  return curr;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/coin-change/" target="_blank" rel="noopener noreferrer">Coin Change</a>
+        </h3>
+        <pre><code>
+function coinChange(coins: number[], amount: number): number {
+  const dp = new Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+
+  for (const coin of coins) {
+    for (let i = coin; i <= amount; i++) {
+      dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+    }
+  }
+  return dp[amount] === Infinity ? -1 : dp[amount];
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/partition-equal-subset-sum/" target="_blank" rel="noopener noreferrer">Partition
+            Equal Subset Sum</a>
+        </h3>
+        <pre><code>
+function canPartition(nums: number[]): boolean {
+  const total = nums.reduce((a, b) => a + b, 0);
+  if (total % 2 !== 0) return false;
+
+  const target = total / 2;
+  const dp = new Array(target + 1).fill(false);
+  dp[0] = true;
+
+  for (const num of nums) {
+    for (let s = target; s >= num; s--) {
+      dp[s] = dp[s] || dp[s - num];
+    }
+  }
+  return dp[target];
+}
+</code></pre>
+      </article>
+    </section>
+
+    <section id="trees">
+      <h2 class="logo-style">Trees <span>Binary Trees BST</span> </h2>
+      <p>
+        Tree problems rely on hierarchical traversal and recursive depth evaluation.
+      </p>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/binary-tree-level-order-traversal/" target="_blank"
+            rel="noopener noreferrer">Binary Tree Level Order Traversal</a>
+        </h3>
+        <pre><code>
+function levelOrder(root: TreeNode | null): number[][] {
+  if (!root) return [];
+  const result: number[][] = [];
+  const queue: TreeNode[] = [root];
+
+  while (queue.length > 0) {
+    const size = queue.length, level: number[] = [];
+    for (let i = 0; i < size; i++) {
+      const node = queue.shift()!;
+      level.push(node.val);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+    result.push(level);
+  }
+  return result;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/diameter-of-binary-tree/" target="_blank" rel="noopener noreferrer">Diameter of
+            Binary Tree</a>
+        </h3>
+        <pre><code>
+function diameterOfBinaryTree(root: TreeNode | null): number {
+  let diameter = 0;
+  const depth = (node: TreeNode | null): number => {
+    if (!node) return 0;
+    const l = depth(node.left), r = depth(node.right);
+    diameter = Math.max(diameter, l + r);
+    return Math.max(l, r) + 1;
+  };
+  depth(root);
+  return diameter;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/" target="_blank"
+            rel="noopener noreferrer">Lowest Common Ancestor of a BST</a>
+        </h3>
+        <pre><code>
+function lowestCommonAncestor(root: TreeNode | null, p: TreeNode, q: TreeNode): TreeNode | null {
+  let curr = root;
+  while (curr) {
+    if (p.val < curr.val && q.val < curr.val) curr = curr.left;
+    else if (p.val > curr.val && q.val > curr.val) curr = curr.right;
+    else return curr;
+  }
+  return null;
+}
+</code></pre>
+      </article>
+    </section>
+
+    <section id="backtracking">
+      <h2 class="logo-style">Backtracking</h2>
+      <p>
+        Backtracking systematically explores all possible configurations by building solutions incrementally.
+      </p>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/subsets/" target="_blank" rel="noopener noreferrer">Subsets</a>
+        </h3>
+        <pre><code>
+function subsets(nums: number[]): number[][] {
+  const res: number[][] = [];
+  const backtrack = (start: number, path: number[]) => {
+    res.push([...path]);
+    for (let i = start; i < nums.length; i++) {
+      path.push(nums[i]);
+      backtrack(i + 1, path);
+      path.pop();
+    }
+  };
+  backtrack(0, []);
+  return res;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/combination-sum/" target="_blank" rel="noopener noreferrer">Combination Sum</a>
+        </h3>
+        <pre><code>
+function combinationSum(candidates: number[], target: number): number[][] {
+  const res: number[][] = [];
+  const backtrack = (index: number, sum: number, path: number[]) => {
+    if (sum === target) return res.push([...path]);
+    if (sum > target) return;
+    for (let i = index; i < candidates.length; i++) {
+      path.push(candidates[i]);
+      backtrack(i, sum + candidates[i], path);
+      path.pop();
+    }
+  };
+  backtrack(0, 0, []);
+  return res;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/word-search/" target="_blank" rel="noopener noreferrer">Word Search</a>
+        </h3>
+        <pre><code>
+function exist(board: string[][], word: string): boolean {
+  const rows = board.length, cols = board[0].length;
+  const dfs = (r: number, c: number, i: number): boolean => {
+    if (i === word.length) return true;
+    if (r < 0 || c < 0 || r >= rows || c >= cols || board[r][c] !== word[i]) return false;
+    const temp = board[r][c];
+    board[r][c] = '#';
+    const found = dfs(r+1,c,i+1) || dfs(r-1,c,i+1) || dfs(r,c+1,i+1) || dfs(r,c-1,i+1);
+    board[r][c] = temp;
+    return found;
+  };
+  for (let r = 0; r < rows; r++)
+    for (let c = 0; c < cols; c++)
+      if (dfs(r, c, 0)) return true;
+  return false;
+}
+</code></pre>
+      </article>
+    </section>
+
+    <section id="linkedlist">
+      <h2 class="logo-style">Linked <span>List</span> </h2>
+      <p>
+        Linked list problems require precise pointer manipulation without relying on random access.
+      </p>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/reverse-linked-list/" target="_blank" rel="noopener noreferrer">Reverse Linked
+            List</a>
+        </h3>
+        <pre><code>
+function reverseList(head: ListNode | null): ListNode | null {
+  let prev = null, curr = head;
+  while (curr) {
+    const next = curr.next;
+    curr.next = prev;
+    prev = curr;
+    curr = next;
+  }
+  return prev;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/linked-list-cycle/" target="_blank" rel="noopener noreferrer">Linked List
+            Cycle</a>
+        </h3>
+        <pre><code>
+function hasCycle(head: ListNode | null): boolean {
+  let slow = head, fast = head;
+  while (fast && fast.next) {
+    slow = slow!.next;
+    fast = fast.next.next;
+    if (slow === fast) return true;
+  }
+  return false;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/merge-two-sorted-lists/" target="_blank" rel="noopener noreferrer">Merge Two
+            Sorted Lists</a>
+        </h3>
+        <pre><code>
+function mergeTwoLists(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+  const dummy = new ListNode(0);
+  let curr = dummy;
+  while (l1 && l2) {
+    if (l1.val < l2.val) { curr.next = l1; l1 = l1.next; }
+    else { curr.next = l2; l2 = l2.next; }
+    curr = curr.next;
+  }
+  curr.next = l1 || l2;
+  return dummy.next;
+}
+</code></pre>
+      </article>
+    </section>
+
+    <section id="stack">
+      <h2 class="logo-style">Stack</h2>
+      <p>
+        Stack problems leverage last-in-first-out ordering to resolve nested or dependent operations.
+      </p>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/valid-parentheses/" target="_blank" rel="noopener noreferrer">Valid
+            Parentheses</a>
+        </h3>
+        <pre><code>
+function isValid(s: string): boolean {
+  const map: Record<string, string> = { ')': '(', ']': '[', '}': '{' };
+  const stack: string[] = [];
+  for (const char of s) {
+    if (map[char]) {
+      if (stack.pop() !== map[char]) return false;
+    } else stack.push(char);
+  }
+  return stack.length === 0;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/daily-temperatures/" target="_blank" rel="noopener noreferrer">Daily
+            Temperatures</a>
+        </h3>
+        <pre><code>
+function dailyTemperatures(T: number[]): number[] {
+  const res = new Array(T.length).fill(0), stack: number[] = [];
+  for (let i = 0; i < T.length; i++) {
+    while (stack.length && T[i] > T[stack[stack.length - 1]]) {
+      const idx = stack.pop()!;
+      res[idx] = i - idx;
+    }
+    stack.push(i);
+  }
+  return res;
+}
+</code></pre>
+      </article>
+    </section>
+
+    <section id="graphs">
+      <h2 class="logo-style">Graphs <span>/ BFS / DFS / Union-Find</span></h2>
+      <p>
+        Graph problems model relationships and dependencies between entities using traversal and connectivity checks.
+      </p>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/number-of-islands/" target="_blank" rel="noopener noreferrer">Number of Islands</a>
+        </h3>
+        
+        <pre><code>
+function numIslands(grid: string[][]): number {
+  let count = 0;
+  const dfs = (r: number, c: number) => {
+    if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length || grid[r][c] === '0') return;
+    grid[r][c] = '0';
+    dfs(r + 1, c); dfs(r - 1, c); dfs(r, c + 1); dfs(r, c - 1);
+  };
+  for (let r = 0; r < grid.length; r++)
+    for (let c = 0; c < grid[0].length; c++)
+      if (grid[r][c] === '1') { count++; dfs(r, c); }
+  return count;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3>
+          <a href="https://leetcode.com/problems/clone-graph/" target="_blank" rel="noopener noreferrer">Clone Graph</a>
+        </h3>
+        
+        <pre><code>
+function cloneGraph(node: Node | null): Node | null {
+  if (!node) return null;
+  const map = new Map<Node, Node>();
+  const clone = (n: Node): Node => {
+    if (map.has(n)) return map.get(n)!;
+    const newNode = new Node(n.val);
+    map.set(n, newNode);
+    newNode.neighbors = n.neighbors.map(clone);
+    return newNode;
+  };
+  return clone(node);
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3><a href="https://leetcode.com/problems/course-schedule/" target="_blank" rel="noopener noreferrer">Course Schedule</a></h3>
+        <pre><code>
+function canFinish(numCourses: number, prerequisites: number[][]): boolean {
+  const adj = Array.from({ length: numCourses }, () => []), state = new Array(numCourses).fill(0);
+  for (const [c, p] of prerequisites) adj[p].push(c);
+  const hasCycle = (v: number) => {
+    if (state[v] === 1) return true;
+    if (state[v] === 2) return false;
+    state[v] = 1;
+    for (const neighbor of adj[v]) if (hasCycle(neighbor)) return true;
+    state[v] = 2;
+    return false;
+  };
+  for (let i = 0; i < numCourses; i++) if (hasCycle(i)) return false;
+  return true;
+}
+</code></pre>
+      </article>
+
+      <article>
+        <h3><a href="https://leetcode.com/problems/redundant-connection/" target="_blank" rel="noopener noreferrer">Redundant
+          Connection</a></h3>
+        <pre><code>
+function findRedundantConnection(edges: number[][]): number[] {
+  const parent = Array.from({ length: edges.length + 1 }, (_, i) => i);
+  const find = (i: number): number => (parent[i] === i ? i : (parent[i] = find(parent[i])));
+  for (const [u, v] of edges) {
+    const rootU = find(u), rootV = find(v);
+    if (rootU === rootV) return [u, v];
+    parent[rootU] = rootV;
+  }
+  return [];
+}
+</code></pre>
+      </article>
+    </section>
 
   </main>
-<footer>Design by <a href="https://github.com/Junkdog-04" target="_blank" rel="noopener noreferrer">Jorge Rosales</a>
-</footer>
+
+  <footer>
+    Design by <a href="https://github.com/Junkdog-04" target="_blank" rel="noopener noreferrer">Jorge Rosales</a>
+  </footer>
+
 </body>
+
 </html>
