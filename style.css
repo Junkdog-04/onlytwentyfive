@@ -178,8 +178,8 @@ code {
     width: 70%;
     padding: 1.2rem;
     gap: 1.2rem;
-    border-left: 1px solid #3079D9;
-    border-bottom: 1px solid #3079D9;
+    border-left: 1px solid #00aff0;
+    border-bottom: 1px solid #00aff0;
     transform: translateX(100%);
     transition: transform 0.3s ease;
     height: calc(100vh - 60px);
